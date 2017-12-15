@@ -1,0 +1,16 @@
+{
+  "presets": ["stage-3","env"],
+  "plugins": [
+    "transform-es2015-modules-commonjs",
+    "transform-export-extensions",
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+        "moduleName": "babel-runtime"
+      }
+    ]
+  ]
+}
