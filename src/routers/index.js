@@ -5,7 +5,7 @@ const router = new Router({
 })
 
 router.get('/', async (ctx, next) => {
-  ctx.response.body = `<h1>test router</h1>`
+  ctx.response.body = `<h1>test aa</h1>`
 })
 
 export default router
