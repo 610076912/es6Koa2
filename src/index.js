@@ -1,15 +1,11 @@
 import Koa from 'koa'
-
-const app = new Koa()
+import router from './routers/index'
 import Search from './controllers/search'
 
-let a = Search.foo()
+const app = new Koa()
 
-console.log(a)
+app.use(router.routes())
 
-app.use(async (ctx) => {
-  ctx.body = 'hello koa2'
-})
 
 app.listen(3000)
 console.log('[demo] start-quick is starting at port 3000')

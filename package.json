@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js",
+    "start": "babel-node ./src/index.js",
     "build": "babel src -d dist -s"
   },
   "author": "",
@@ -19,6 +19,9 @@
     "babel-preset-stage-3": "^6.24.1"
   },
   "dependencies": {
-    "koa": "^2.4.1"
+    "elasticsearch": "^14.0.0",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.3.0"
   }
 }
