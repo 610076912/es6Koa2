@@ -5,7 +5,11 @@ const router = new Router({
 })
 
 router.get('/', async (ctx, next) => {
-  ctx.response.body = `<h1>test aa</h1>`
+  ctx.send({
+    code: 400,
+    data: [123, 456, 789],
+    message: 'success'
+  })
 })
 
 export default router
