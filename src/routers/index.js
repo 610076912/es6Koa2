@@ -1,15 +1,10 @@
 import Router from 'koa-router'
+import Search from '../controllers/search'
 
 const router = new Router({
   prefix: '/api'
 })
 
-router.get('/', async (ctx, next) => {
-  ctx.send({
-    code: 400,
-    data: [123, 456, 789],
-    message: 'success'
-  })
-})
+router.get('/', Search.indexDate)
 
 export default router
