@@ -5,6 +5,6 @@ const router = new Router({
   prefix: '/api'
 })
 
-router.get('/', Search.indexDate)
+router.get('/', Search.totalDate)
 
 export default router
