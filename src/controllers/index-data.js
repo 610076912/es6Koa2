@@ -108,7 +108,7 @@ class Search {
 
   async channelData(ctx) {
     let {user_id, channel_id, time_range} = ctx.request.query
-
+    console.log(ctx.request.query)
     try {
       if (!user_id) {
         throw new Error('user_id参数错误')
@@ -222,6 +222,10 @@ class Search {
       })
       clickTotal = res.hits.total
     })
+    // 点击率数组
+    let clickRateArr = bgArr.map((item, index) => {
+      return item === 0 ? 0 : clickArr[index] / item
+    })
     ctx.send({
       code: 200,
       data: {
@@ -230,7 +234,8 @@ class Search {
         clickArr,
         clickTotal,
         datelist,
-        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal).toFixed(6) * 100 + '%'
+        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal).toFixed(6) * 100 + '%',
+        clickRateArr
       },
       msg: 'success'
     })
