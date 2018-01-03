@@ -1,5 +1,6 @@
-import client from '../config/config.elastic'
-import getActId from '../service/get-act-id'
+import client from '../../config/config.elastic'
+import getActId from '../../service/get-act-id'
+import getActIdDetail from '../../service/get-actId-detail'
 
 class Search {
   constructor() {
@@ -10,9 +11,9 @@ class Search {
   async totalData(ctx) {
     const {user_id, channel_id} = ctx.request.query
     const today = [new Date().setHours(0, 0, 0, 0), 'now']
-    console.log(today)
 
-
+    // const a = await getActIdDetail(user_id)
+    // ctx.send(a)
     try {
       if (!user_id) {
         throw new Error('user_id参数错误')
@@ -30,7 +31,7 @@ class Search {
     const actIdRes = await getActId(user_id, channel_id)
 
     // 没有数据
-    console.log(actIdRes)
+    // console.log(actIdRes)
     if (actIdRes.length === 0) {
       ctx.send({
         code: 200,
@@ -54,7 +55,7 @@ class Search {
             'filter': {
               'bool': {
                 'must': [
-                  {'terms': {'act_id.keyword': actIdRes}},
+                  {'terms': {'act_id': actIdRes}},
                   {'range': {'request_time': {'from': 'now-1w', 'to': today[1]}}}
                 ]
               }
@@ -79,7 +80,7 @@ class Search {
             'filter': {
               'bool': {
                 'must': [
-                  {'terms': {'act_id.keyword': actIdRes}},
+                  {'terms': {'act_id': actIdRes}},
                   {'range': {'request_time': {'from': 'now-1w', 'to': today[1]}}}
                 ]
               }
@@ -105,16 +106,16 @@ class Search {
       msg: 'success'
     })
   }
-
+  // 图表接口数据
   async channelData(ctx) {
     let {user_id, channel_id, time_range} = ctx.request.query
-    console.log(ctx.request.query)
+
     try {
       if (!user_id) {
         throw new Error('user_id参数错误')
       } else if (channel_id && (!Number(channel_id) && Number(channel_id) !== 0)) {
         throw new Error('channel_id参数错误')
-      } else if (time_range && !Array.isArray(time_range)) {
+      } else if (time_range && !Array.isArray(JSON.parse(time_range))) {
         throw new Error('time_range参数错误')
       }
     } catch (err) {
@@ -126,6 +127,8 @@ class Search {
     }
     if (!time_range) {
       time_range = ['now-7d/d', 'now']
+    } else {
+      time_range = JSON.parse(time_range)
     }
 
     const actIdRes = await getActId(user_id, channel_id)
@@ -146,7 +149,7 @@ class Search {
         'query': {
           'bool': {
             'must': [
-              {'terms': {'act_id.keyword': actIdRes}},
+              {'terms': {'act_id': actIdRes}},
               {
                 'range': {
                   'request_time': {
@@ -189,7 +192,7 @@ class Search {
         'query': {
           'bool': {
             'must': [
-              {'terms': {'act_id.keyword': actIdRes}},
+              {'terms': {'act_id': actIdRes}},
               {
                 'range': {
                   'request_time': {

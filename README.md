@@ -36,8 +36,8 @@ src                   // 源码
   controllers         // 
   middleware          // 中间件目录
   router              // 路由
-babel-index.js        // 开发环境实时进行babel编译的入口文件
-index.js              // 入口文件
+babel-dsp.js        // 开发环境实时进行babel编译的入口文件
+dsp.js              // 入口文件
 
 ```
 
