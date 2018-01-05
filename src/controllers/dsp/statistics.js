@@ -40,11 +40,9 @@ class Statistics {
       })
       return
     }
-    console.log(plan_b_time, plan_e_time)
     // 将时间转化为时间戳，并且设置最后一天的时间为23时59分59秒999毫秒
     plan_b_time = new Date(plan_b_time).setHours(0, 0, 0, 0)
     plan_e_time = new Date(plan_e_time).setHours(23, 59, 59, 999)
-    console.log(plan_b_time, plan_e_time)
     if (actid_list) {
       actid_list = JSON.parse(actid_list)
     }

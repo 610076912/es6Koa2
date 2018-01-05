@@ -17,7 +17,7 @@ class Search {
     try {
       if (!user_id) {
         throw new Error('user_id参数错误')
-      } else if (channel_id && (!Number(channel_id) && Number(channel_id) !== 0)) {
+      } else if (channel_id && (!Number(channel_id) && Number(channel_id) === 0)) {
         throw new Error('channel_id参数错误')
       }
     } catch (err) {
@@ -35,7 +35,11 @@ class Search {
     if (actIdRes.length === 0) {
       ctx.send({
         code: 200,
-        data: [],
+        data: {
+          bg_count: 0,
+          click_count: 0,
+          click_rate: 0
+        },
         msg: actIdRes.msg
       })
       return
@@ -101,7 +105,7 @@ class Search {
       data: {
         bg_count,
         click_count,
-        click_rate: click_count === 0 ? 0 : (click_count / bg_count).toFixed(6) * 100 + '%'
+        click_rate: click_count === 0 ? 0 : (click_count / bg_count).toFixed(4) * 100 + '%'
       },
       msg: 'success'
     })
@@ -237,7 +241,7 @@ class Search {
         clickArr,
         clickTotal,
         datelist,
-        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal).toFixed(6) * 100 + '%',
+        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal).toFixed(4) * 100 + '%',
         clickRateArr
       },
       msg: 'success'
