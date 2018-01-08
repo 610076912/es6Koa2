@@ -72,7 +72,6 @@ class Overview {
         }
       }
     }).then(res => {
-      ctx.send(res)
       playCount = res.hits.total
     })
 
@@ -90,13 +89,6 @@ class Overview {
                   {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
                 ]
               }
-            }
-          }
-        },
-        'aggs': {
-          'clickCount': {
-            'terms': {
-              'field': 'media_channel_id'
             }
           }
         }
@@ -318,7 +310,7 @@ class Overview {
     // 每页多少条数据
     const pageCount = 10
     // 总共多少条数据
-    let total
+    let total = 0
     let {platform_id, page_num, time_range} = ctx.request.query
     try {
       if (!platform_id) {
@@ -347,7 +339,7 @@ class Overview {
         msg: err.message
       })
     }
-    let videoIdList = []
+    let videoIdList = [], sendData = []
     // 根据platform_id 查询videoid，并且分页
     await client.search({
       index: 'sltlog_adseat_request_log-*',
@@ -375,17 +367,27 @@ class Overview {
         }
       }
     }).then(res => {
-      ctx.send(res)
-      let resArr = res.aggregations.mediaId.buckets.slice((page_num - 1) * pageCount, (page_num * pageCount))
-      resArr.forEach(item => {
-        videoIdList.push(item.key)
-      })
-      // res.send(bgArr)
-      total = res.aggregations.mediaId.buckets.length
+      if (res.hits.total !== 0) {
+        let resArr = res.aggregations.mediaId.buckets.slice((page_num - 1) * pageCount, (page_num * pageCount))
+        resArr.forEach(item => {
+          videoIdList.push(item.key)
+          sendData.push({
+            media_id: '',
+            media_name: '',
+            video_id: item.key,
+            playCount: item.doc_count,
+            bg_count: 0,
+            pjbg: 0,
+            click_count: 0,
+            pjclick: 0
+          })
+        })
+        // res.send(bgArr)
+        total = res.aggregations.mediaId.buckets.length
+      }
     })
 
-    // 根据videoIdList查询mediaName、mediaId和playCount
-    let sendData = []
+    // 根据videoIdList查询mediaName、mediaId
     await client.search({
       index: 'sltlog_ssp_adseat',
       body: {
@@ -417,18 +419,16 @@ class Overview {
         }
       }
     }).then(res => {
-      res.aggregations.mediaInfo.buckets.forEach(item => {
-        sendData.push({
-          media_id: item.mediaName.hits.hits[0]._source.media_id,
-          media_name: item.mediaName.hits.hits[0]._source.media_name,
-          video_id: item.key,
-          playCount: item.doc_count,
-          bg_count: 0,
-          pjbg: 0,
-          click_count: 0,
-          pjclick: 0
+      if (res.hits.total !== 0) {
+        res.aggregations.mediaInfo.buckets.forEach(item => {
+          sendData.forEach(sitem => {
+            if (item.key === sitem.video_id) {
+              sitem.media_id = item.mediaName.hits.hits[0]._source.media_id,
+                sitem.media_name = item.mediaName.hits.hits[0]._source.media_name
+            }
+          })
         })
-      })
+      }
     })
 
     // 查询曝光量
@@ -441,8 +441,8 @@ class Overview {
             'filter': {
               'bool': {
                 'must': [
-                  {'terms': {'video_id': videoIdList}}
-                  // {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
+                  {'terms': {'video_id': videoIdList}},
+                  {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
                 ]
               }
             }
@@ -457,15 +457,16 @@ class Overview {
         }
       }
     }).then(res => {
-      ctx.send(res)
-      res.aggregations.mediaInfo.buckets.forEach(item => {
-        sendData.forEach(sitem => {
-          if (item.key === sitem.video_id) {
-            sitem.bg_count = item.doc_count
-            sitem.pjbg = sitem.playCount === 0 ? 0 : sitem.bg_count / sitem.playCount
-          }
+      if (res.hits.total !== 0) {
+        res.aggregations.mediaInfo.buckets.forEach(item => {
+          sendData.forEach(sitem => {
+            if (item.key === sitem.video_id) {
+              sitem.bg_count = item.doc_count
+              sitem.pjbg = sitem.playCount === 0 ? 0 : sitem.bg_count / sitem.playCount
+            }
+          })
         })
-      })
+      }
     })
 
     // 查询点击量
@@ -478,8 +479,8 @@ class Overview {
             'filter': {
               'bool': {
                 'must': [
-                  {'terms': {'video_id': videoIdList}}
-                  // {'range': {'request_time': {'from': timeRange[0], 'to': timeRange[1]}}}
+                  {'terms': {'video_id': videoIdList}},
+                  {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
                 ]
               }
             }
@@ -495,17 +496,19 @@ class Overview {
       }
     }).then(res => {
       // ctx.send(res)
-      res.aggregations.mediaInfo.buckets.forEach(item => {
-        sendData.forEach(sitem => {
-          if (item.key === sitem.video_id) {
-            sitem.click_count = item.doc_count
-            sitem.pjclick = sitem.bg_count === 0 ? 0 : sitem.click_count / sitem.bg_count
-          }
+      if (res.hits.total !== 0) {
+        res.aggregations.mediaInfo.buckets.forEach(item => {
+          sendData.forEach(sitem => {
+            if (item.key === sitem.video_id) {
+              sitem.click_count = item.doc_count
+              sitem.pjclick = sitem.bg_count === 0 ? 0 : sitem.click_count / sitem.bg_count
+            }
+          })
         })
-      })
+      }
     })
 
-    ctx.send({code: 200, data:sendData, msg: 'success'})
+    ctx.send({code: 200, data: sendData, msg: 'success'})
   }
 }
 

@@ -60,7 +60,7 @@ class Search {
               'bool': {
                 'must': [
                   {'terms': {'act_id': actIdRes}},
-                  {'range': {'request_time': {'from': 'now-1w', 'to': today[1]}}}
+                  {'range': {'request_time': {'from': today[0], 'to': today[1]}}}
                 ]
               }
             }
@@ -85,7 +85,7 @@ class Search {
               'bool': {
                 'must': [
                   {'terms': {'act_id': actIdRes}},
-                  {'range': {'request_time': {'from': 'now-1w', 'to': today[1]}}}
+                  {'range': {'request_time': {'from': today[0], 'to': today[1]}}}
                 ]
               }
             }
@@ -110,6 +110,7 @@ class Search {
       msg: 'success'
     })
   }
+
   // 图表接口数据
   async channelData(ctx) {
     let {user_id, channel_id, time_range} = ctx.request.query
@@ -181,11 +182,11 @@ class Search {
         }
       }
     }).then(res => {
+      bgTotal = res.hits.total
       res.aggregations.aggsArr.buckets.forEach(item => {
         bgArr.push(item.doc_count)
         datelist.push(item.key_as_string)
       })
-      bgTotal = res.hits.total
     })
 
     // 查询点击量量
@@ -224,10 +225,10 @@ class Search {
         }
       }
     }).then(res => {
+      clickTotal = res.hits.total
       res.aggregations.aggsArr.buckets.forEach(item => {
         clickArr.push(item.doc_count)
       })
-      clickTotal = res.hits.total
     })
     // 点击率数组
     let clickRateArr = bgArr.map((item, index) => {

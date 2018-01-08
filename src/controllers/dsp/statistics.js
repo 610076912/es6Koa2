@@ -82,15 +82,16 @@ class Statistics {
         }
       }
     }).then(res => {
-      ctx.send(res)
       // 曝光量
       bgCount = res.hits.total
-      res.aggregations.aggsArr.buckets.forEach(item => {
-        // 日期数据
-        dateArr.push(item.key_as_string)
-        // 曝光每天数据
-        bgArr.push(item.doc_count)
-      })
+      if (bgCount !== 0) {
+        res.aggregations.aggsArr.buckets.forEach(item => {
+          // 日期数据
+          dateArr.push(item.key_as_string)
+          // 曝光每天数据
+          bgArr.push(item.doc_count)
+        })
+      }
     })
 
     // 查询点击量
@@ -132,12 +133,14 @@ class Statistics {
       clickCount = res.hits.total
       // 点击率
       clickRate = clickCount === 0 ? 0 : clickCount / bgCount
-      res.aggregations.aggsArr.buckets.forEach((item, index) => {
-        // 点击量每天的数据
-        clickArr.push(item.doc_count)
-        // 点击率每天的数据
-        clickRateArr.push(item.doc_count === 0 ? 0 : item.doc_count / bgArr[index])
-      })
+      if (clickCount !== 0) {
+        res.aggregations.aggsArr.buckets.forEach((item, index) => {
+          // 点击量每天的数据
+          clickArr.push(item.doc_count)
+          // 点击率每天的数据
+          clickRateArr.push(item.doc_count === 0 ? 0 : item.doc_count / bgArr[index])
+        })
+      }
     })
 
     ctx.send({
