@@ -105,7 +105,7 @@ class Search {
       data: {
         bg_count,
         click_count,
-        click_rate: click_count === 0 ? 0 : (click_count / bg_count).toFixed(4) * 100 + '%'
+        click_rate: click_count === 0 ? 0 : (click_count / bg_count)
       },
       msg: 'success'
     })
@@ -183,10 +183,12 @@ class Search {
       }
     }).then(res => {
       bgTotal = res.hits.total
-      res.aggregations.aggsArr.buckets.forEach(item => {
-        bgArr.push(item.doc_count)
-        datelist.push(item.key_as_string)
-      })
+      if (bgTotal !== 0) {
+        res.aggregations.aggsArr.buckets.forEach(item => {
+          bgArr.push(item.doc_count)
+          datelist.push(item.key_as_string)
+        })
+      }
     })
 
     // 查询点击量量
@@ -226,9 +228,11 @@ class Search {
       }
     }).then(res => {
       clickTotal = res.hits.total
-      res.aggregations.aggsArr.buckets.forEach(item => {
-        clickArr.push(item.doc_count)
-      })
+      if (clickTotal !== 0) {
+        res.aggregations.aggsArr.buckets.forEach(item => {
+          clickArr.push(item.doc_count)
+        })
+      }
     })
     // 点击率数组
     let clickRateArr = bgArr.map((item, index) => {
@@ -242,7 +246,7 @@ class Search {
         clickArr,
         clickTotal,
         datelist,
-        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal).toFixed(4) * 100 + '%',
+        clickRate: clickTotal === 0 ? 0 : (clickTotal / bgTotal),
         clickRateArr
       },
       msg: 'success'

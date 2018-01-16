@@ -238,9 +238,11 @@ class Overview {
         }
       }
     }).then(res => {
-      res.aggregations.aggsArr.buckets.forEach(item => {
-        bgCount.push(item.doc_count)
-      })
+      if (res.hits.total !== 0) {
+        res.aggregations.aggsArr.buckets.forEach(item => {
+          bgCount.push(item.doc_count)
+        })
+      }
     })
 
     // 查询点击次数
@@ -291,14 +293,20 @@ class Overview {
         }
       }
     }).then(res => {
-      res.aggregations.aggsArr.buckets.forEach(item => {
-        clickCount.push(item.doc_count)
-      })
+      if (res.hits.total !== 0) {
+        res.aggregations.aggsArr.buckets.forEach(item => {
+          clickCount.push(item.doc_count)
+        })
+      }
     })
 
     playCount.forEach((item, index) => {
-      let bgRate = item === 0 ? 0 : bgCount[index] / item
-      let clickRate = bgCount[index] === 0 ? 0 : clickCount[index] / bgCount[index]
+      let bgRate = item ? bgCount[index] / item : 0
+      let clickRate = bgCount[index] ? clickCount[index] / bgCount[index] : 0
+      let bgitem = bgCount[index] || 0
+      let clickitem = clickCount[index] || 0
+      bgCount.push(bgitem)
+      clickCount.push(clickitem)
       pjbg.push(bgRate)
       pjclick.push(clickRate)
     })

@@ -8,10 +8,12 @@ import superagent from 'superagent'
 *                  3: OTT
 * @return actIdRes[]
 * */
+let testEnv = process.env.NODE_ENV === 'test'
+let bestUrl =testEnv ?  'http://47.93.140.7' : 'http://context.bjvca.com'
 async function getActId(userId, actType = 1) {
   let actIdRes
   await superagent
-    .post("http://context.bjvca.com/esapi/v1/actIdsForUserId")
+    .post(bestUrl + "/esapi/v1/actIdsForUserId")
     .type('application/json')
     .set('accept', 'json')
     .send({user_id: userId})

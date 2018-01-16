@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development supervisor --watch ./src ./src/babel-index.js",
-    "start": "cross-env NODE_ENV=production babel-node ./src/index.js",
+    "dev-test": "cross-env NODE_ENV=test supervisor --watch ./src ./src/babel-index.js",
     "build": "babel src -d dist -s"
   },
   "author": "",

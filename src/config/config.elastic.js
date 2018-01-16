@@ -1,13 +1,20 @@
 import ElasticSearch from 'elasticsearch'
 
+let testEnv = process.env.NODE_ENV === 'test'
+let host = testEnv ? {
+  host: '47.93.140.7',
+  auth: 'els:els',
+  protocol: 'http',
+  port: 9200
+}: {
+  host: '47.95.35.153',
+  auth: 'elastic:elastic',
+  protocol: 'http',
+  port: 9200
+}
 const client = new ElasticSearch.Client({
   hosts: [
-    {
-      host: '47.95.35.153',
-      auth: 'elastic:elastic',
-      protocol: 'http',
-      port: 9200
-    }
+    host
   ]
 })
 

@@ -6,16 +6,22 @@
 ```
 
 ```
-开发环境
+开发环境(正式服务器)
 npm run dev 
 
+开发环境(测试服务器)
+npm run dev-test
 
-模拟生产环境
-npm run satrt
 
 
 代码编译
 npm run build
+
+部署（使用pm2）
+    部署测试服务器
+    pm2 ./pm2.test.json
+    部署正式服务器
+    pm2 ./pm2.producion.json
 
 
 访问: http://localhost:3889

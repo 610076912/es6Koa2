@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "es-search",
+      "script": "./dist/index.js",
+      "watch": true,
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  ]
+}
