@@ -76,6 +76,7 @@ class Statistics {
                 'min': plan_b_time,
                 'max': plan_e_time
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }
@@ -123,6 +124,7 @@ class Statistics {
                 'min': plan_b_time,
                 'max': plan_e_time
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }

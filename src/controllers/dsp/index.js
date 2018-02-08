@@ -131,7 +131,7 @@ class Search {
       return
     }
     if (!time_range) {
-      time_range = ['now-7d/d', 'now']
+      time_range = ['now-6d/1d', 'now']
     } else {
       time_range = JSON.parse(time_range)
     }
@@ -176,6 +176,7 @@ class Search {
                 'min': time_range[0],
                 'max': time_range[1]
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }
@@ -221,6 +222,7 @@ class Search {
                 'min': time_range[0],
                 'max': time_range[1]
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }

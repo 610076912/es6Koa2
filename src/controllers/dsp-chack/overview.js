@@ -15,7 +15,7 @@ class Overview {
           throw new Error('time_range参数错误')
         }
       } else {
-        time_range = ['now-1w/d', 'now']
+        time_range = ['now-6d/1d', 'now']
       }
 
       if (!platform_id) {
@@ -122,7 +122,7 @@ class Overview {
           throw new Error('time_range参数错误')
         }
       } else {
-        time_range = ['now-1w/d', 'now']
+        time_range = ['now-6d/1d', 'now']
       }
 
       if (!platform_id) {
@@ -178,6 +178,7 @@ class Overview {
                 'min': time_range[0],
                 'max': time_range[1]
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }
@@ -232,17 +233,16 @@ class Overview {
                 'min': time_range[0],
                 'max': time_range[1]
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }
         }
       }
     }).then(res => {
-      if (res.hits.total !== 0) {
-        res.aggregations.aggsArr.buckets.forEach(item => {
-          bgCount.push(item.doc_count)
-        })
-      }
+      res.aggregations.aggsArr.buckets.forEach(item => {
+        bgCount.push(item.doc_count)
+      })
     })
 
     // 查询点击次数
@@ -287,17 +287,16 @@ class Overview {
                 'min': time_range[0],
                 'max': time_range[1]
               },
+              'time_zone': 'Asia/Shanghai',
               'format': 'yyyy-MM-dd'
             }
           }
         }
       }
     }).then(res => {
-      if (res.hits.total !== 0) {
-        res.aggregations.aggsArr.buckets.forEach(item => {
-          clickCount.push(item.doc_count)
-        })
-      }
+      res.aggregations.aggsArr.buckets.forEach(item => {
+        clickCount.push(item.doc_count)
+      })
     })
 
     playCount.forEach((item, index) => {
@@ -305,8 +304,8 @@ class Overview {
       let clickRate = bgCount[index] ? clickCount[index] / bgCount[index] : 0
       let bgitem = bgCount[index] || 0
       let clickitem = clickCount[index] || 0
-      bgCount.push(bgitem)
-      clickCount.push(clickitem)
+      bgCount[index] = bgitem
+      clickCount[index] = clickitem
       pjbg.push(bgRate)
       pjclick.push(clickRate)
     })
@@ -339,7 +338,7 @@ class Overview {
           throw new Error('time_range参数错误')
         }
       } else {
-        time_range = ['now-1w/d', 'now']
+        time_range = ['now-6d/1d', 'now']
       }
     } catch (err) {
       ctx.send({
@@ -516,7 +515,7 @@ class Overview {
       }
     })
 
-    ctx.send({code: 200, data: sendData, msg: 'success'})
+    ctx.send({code: 200, data: sendData, total: total, msg: 'success'})
   }
 }
 
