@@ -331,8 +331,7 @@ class Overview {
       } else {
         page_num = 1
       }
-
-      if (time_range) {
+      if (time_range && time_range !== '""') {
         time_range = JSON.parse(time_range)
         if (!Array.isArray(time_range)) {
           throw new Error('time_range参数错误')
@@ -345,6 +344,7 @@ class Overview {
         code: 400,
         msg: err.message
       })
+      return
     }
     let videoIdList = [], sendData = []
     // 根据platform_id 查询videoid，并且分页

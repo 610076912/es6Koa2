@@ -7,7 +7,7 @@ let host = testEnv ? {
   protocol: 'http',
   port: 9200
 }: {
-  host: '47.95.35.153',
+  host: '10.81.11.24', // 修改为阿里云内网地址
   auth: 'elastic:elastic',
   protocol: 'http',
   port: 9200
