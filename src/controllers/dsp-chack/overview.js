@@ -55,7 +55,7 @@ class Overview {
 
     // 第二个查询视频播放次数
     await client.search({
-      index: 'sltlog_adseat_request_log*',
+      index: 'sltlog_adseat_allrequest_log*',
       body: {
         'size': 0,
         'query': {
@@ -64,6 +64,7 @@ class Overview {
               'bool': {
                 'must': [
                   {'term': {'media_channel_id': platform_id}},
+                  {'term': {'ishaveseat': 1}},
                   {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
                 ]
               }
@@ -138,7 +139,7 @@ class Overview {
     let dateArr = [], playCount = [], bgCount = [], clickCount = [], pjbg = [], pjclick = []
     // 查询播放次数
     await client.search({
-      index: 'sltlog_adseat_request_log*',
+      index: 'sltlog_adseat_allrequest_log*',
       body: {
         'size': 0,
         '_source': {
@@ -147,9 +148,8 @@ class Overview {
         'query': {
           'bool': {
             'must': [
-              {
-                'match_all': {}
-              },
+              {'term': {'ishaveseat': 1}},
+              {'match_all': {}},
               {
                 'match_phrase': {
                   'media_channel_id': {
@@ -349,7 +349,7 @@ class Overview {
     let videoIdList = [], sendData = []
     // 根据platform_id 查询videoid，并且分页
     await client.search({
-      index: 'sltlog_adseat_request_log-*',
+      index: 'sltlog_adseat_allrequest_log-*',
       body: {
         'size': 0,
         'query': {
@@ -358,6 +358,7 @@ class Overview {
               'bool': {
                 'must': [
                   {'term': {'media_channel_id': platform_id}},
+                  {'term': {'ishaveseat': 1}},
                   {'range': {'request_time': {'from': time_range[0], 'to': time_range[1]}}}
                 ]
               }
