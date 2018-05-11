@@ -2,12 +2,13 @@ import ElasticSearch from 'elasticsearch'
 
 let testEnv = process.env.NODE_ENV === 'test'
 let host = testEnv ? {
-  host: '47.93.140.7',
+  host: '10.30.96.84',
   auth: 'els:els',
   protocol: 'http',
   port: 9200
 }: {
-  host: '10.81.11.24', // 修改为阿里云内网地址
+  // host: '10.81.11.24', // 修改为阿里云内网地址
+  host: '47.95.35.153',
   auth: 'elastic:elastic',
   protocol: 'http',
   port: 9200
