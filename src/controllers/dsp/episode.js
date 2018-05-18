@@ -6,6 +6,14 @@ class SearchEpisode {
   }
 
   async searchEpisode(ctx) {
+    let {search_text} = ctx.request.query
+    if (!search_text) {
+      ctx.send({
+        code: 204,
+        msg: '请输入内容'
+      })
+      return
+    }
     await client.search({
       index: 'sltlog_ssp_adseat',
       body: {
@@ -15,7 +23,7 @@ class SearchEpisode {
         },
         'query': {
           'match': {
-            'media_episode_name': '我的'
+            'media_episode_name': search_text
           }
         },
         'aggs': {
@@ -27,6 +35,13 @@ class SearchEpisode {
               'mediaChannelId': {
                 'terms': {
                   'field': 'media_channel_id'
+                },
+                'aggs': {
+                  'episodeId': {
+                    'terms': {
+                      'field': 'media_episode_id'
+                    }
+                  }
                 }
               }
             }
@@ -34,7 +49,20 @@ class SearchEpisode {
         }
       }
     }).then(res => {
-      ctx.send(res)
+      let resultArr = []
+      res.aggregations.episodeName.buckets.forEach(item => {
+        let result = {}
+        result.name = item.key
+        result.ids = []
+        item.mediaChannelId.buckets.forEach(item1 => {
+          let obj = {}
+          obj.mediaChannelId = item1.key
+          obj.episodeId = item1.episodeId.buckets[0].key
+          result.ids.push(obj)
+        })
+        resultArr.push(result)
+      })
+      ctx.send({code: 200, data:resultArr, msg: 'success'})
     })
   }
 }
