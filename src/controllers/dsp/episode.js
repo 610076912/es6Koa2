@@ -22,7 +22,7 @@ class SearchEpisode {
           'include': ['media_episode_name', 'media_channel_id']
         },
         'query': {
-          'match': {
+          'match_phrase': {
             'media_episode_name': search_text
           }
         },
