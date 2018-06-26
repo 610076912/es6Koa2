@@ -23,6 +23,7 @@
   "dependencies": {
     "babel-register": "^6.26.0",
     "elasticsearch": "^14.0.0",
+    "excel-export": "^0.5.1",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",

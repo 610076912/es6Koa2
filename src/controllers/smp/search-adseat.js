@@ -40,7 +40,11 @@ class SmpSearch {
           'constant_score': {
             'filter': {
               'bool': {
-                'must': searchBody
+                'must': searchBody,
+                'must_not': [
+                  {'term': {'media_channel_id': 1021}},
+                  {'term': {'media_channel_id': 1015}}
+                ]
               }
             }
           }
