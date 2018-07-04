@@ -2,14 +2,18 @@ import ElasticSearch from 'elasticsearch'
 
 let testEnv = process.env.NODE_ENV === 'test'
 let host = testEnv ? {
+  // 外网
   host: '47.95.165.118',
+  // 内网
   // host: '10.30.96.84',
   auth: 'elastic:elastic',
   protocol: 'http',
   port: 9200
 }: {
-  host: '10.81.11.24', // 修改为阿里云内网地址
+  // （外网）
   // host: '47.95.35.153',
+  // (内网)
+  host: '10.81.11.24',
   auth: 'elastic:elastic',
   protocol: 'http',
   port: 9200
@@ -30,5 +34,6 @@ client.ping({
     console.log('All is well')
   }
 })
+
 
 export default client
