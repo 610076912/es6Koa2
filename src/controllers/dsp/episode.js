@@ -6,7 +6,16 @@ class SearchEpisode {
   }
 
   async searchEpisode(ctx) {
-    let {search_text} = ctx.request.query
+    let {search_text, channel_ids} = ctx.request.query
+    if (!channel_ids) {
+      return ctx.send({
+        code: 204,
+        msg: '请将参数输入完整'
+      })
+    }
+    console.log(channel_ids)
+    const channelArr = JSON.parse(channel_ids)
+    console.log(channelArr)
     if (!search_text) {
       ctx.send({
         code: 204,
@@ -14,6 +23,13 @@ class SearchEpisode {
       })
       return
     }
+    let sqlShould = []
+    if (Array.isArray(channelArr)) {
+      channelArr.forEach(item => {
+        sqlShould.push({'term': {'media_channel_id': item}})
+      })
+    }
+    console.log(sqlShould)
     await client.search({
       index: 'sltlog_ssp_adseat',
       body: {
@@ -22,9 +38,21 @@ class SearchEpisode {
           'include': ['media_episode_name', 'media_channel_id']
         },
         'query': {
-          'match_phrase': {
-            'media_episode_name': search_text
-          }
+          'constant_score': {
+            'filter': {
+              'bool': {
+                'must': [
+                  {
+                    'match_phrase': {
+                      'media_episode_name': search_text
+                    },
+
+                  }
+                ],
+                'should': sqlShould
+              }
+            }
+          },
         },
         'aggs': {
           'episodeName': {

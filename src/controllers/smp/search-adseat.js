@@ -84,6 +84,30 @@ class SmpSearch {
       })
     })
   }
+  /*async deleteData(ctx) {
+
+    await client.deleteByQuery({
+      index: '*ad_allrequest*',
+      body: {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "range": {
+                  "request_time": {
+                    "gte": 1522425600000,
+                    "lte": 1530374399999
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }).then(res => {
+      ctx.send(res)
+    })
+  }*/
 }
 
 export default new SmpSearch()
