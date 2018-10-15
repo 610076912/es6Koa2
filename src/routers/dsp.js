@@ -10,5 +10,6 @@ router.get('/channel_data', Search.channelData)
 router.get('/get_plan_list', Statistcs.getPlanList)
 router.get('/get_promotion_data', Statistcs.promotionData)
 router.get('/search_episode', SearchEpisode.searchEpisode)
+router.get('/search_more_episode', SearchEpisode.searchMoreEpisode)
 
 export default router

@@ -1,6 +1,7 @@
 import log4js from 'log4js'
 import access from './access'
 
+// 追踪、调试、信息、警告、错误、严重错误、标记
 const methods = ["trace", "debug", "info", "warn", "error", "fatal", "mark"]
 
 const baseInfo = {

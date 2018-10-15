@@ -13,9 +13,9 @@ class SearchEpisode {
         msg: '请将参数输入完整'
       })
     }
-    console.log(channel_ids)
+    // console.log(channel_ids)
     const channelArr = JSON.parse(channel_ids)
-    console.log(channelArr)
+    // console.log(channelArr)
     if (!search_text) {
       ctx.send({
         code: 204,
@@ -29,7 +29,7 @@ class SearchEpisode {
         sqlShould.push({'term': {'media_channel_id': item}})
       })
     }
-    console.log(sqlShould)
+    // console.log(sqlShould)
     await client.search({
       index: 'sltlog_ssp_adseat',
       body: {
@@ -46,7 +46,6 @@ class SearchEpisode {
                     'match_phrase': {
                       'media_episode_name': search_text
                     },
-
                   }
                 ],
                 'should': sqlShould
@@ -90,7 +89,61 @@ class SearchEpisode {
         })
         resultArr.push(result)
       })
-      ctx.send({code: 200, data:resultArr, msg: 'success'})
+      ctx.send({code: 200, data: resultArr, msg: 'success'})
+    })
+  }
+
+  async searchMoreEpisode(ctx) {
+    let {search_text} = ctx.request.query
+    // 这里查出去的剧集id均为 9999
+    const channelId = 9999
+    // console.log(channelArr)
+    if (!search_text) {
+      ctx.send({
+        code: 204,
+        msg: '请输入内容'
+      })
+      return
+    }
+
+    await client.search({
+      index: 'sltlog_ssp_episode',
+      body: {
+        'size': 10000,
+        // '_source': {
+        //   'include': ['media_episode_name']
+        // },
+        'query': {
+          'constant_score': {
+            'filter': {
+              'bool': {
+                'must': [
+                  {
+                    'match_phrase': {
+                      'media_episode_name': search_text
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }).then(res => {
+      let sendRes = []
+      if (res.hits.total !== 0) {
+        res.hits.hits.forEach(item => {
+          let obj = {}
+          obj.name = item._source.media_episode_name
+          obj.ids = []
+          obj.ids.push({
+            mediaChannelId: channelId,
+            episodeId: item._id
+          })
+          sendRes.push(obj)
+        })
+      }
+      ctx.send({code: 200, data: sendRes, msg: 'success'})
     })
   }
 }
