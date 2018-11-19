@@ -23,7 +23,7 @@ async function getActId(userId, actType = 1) {
   if (actIdRes.code === 200) {
     switch (Number(actType)) {
       case 0:
-        return [...actIdRes.data[1], ...actIdRes.data[2], ...actIdRes.data[3], ...actIdRes.data[4]]
+        return [...actIdRes.data[1], ...actIdRes.data[2], ...actIdRes.data[3], ...actIdRes.data[4], ...actIdRes.data[5]]
       case 1:
         return actIdRes.data[1]
       case 2:
@@ -32,6 +32,8 @@ async function getActId(userId, actType = 1) {
         return actIdRes.data[3]
       case 4:
         return actIdRes.data[4]
+      case 5:
+        return actIdRes.data[5]
       default:
         throw new Error('actType参数错误')
     }
