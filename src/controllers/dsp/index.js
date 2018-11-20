@@ -32,15 +32,14 @@ class Search {
 
     // 没有数据
     // console.log(actIdRes)
-    if (actIdRes.length === 0) {
+    if ((!actIdRes)||actIdRes.length === 0) {
       ctx.send({
         code: 200,
         data: {
           bg_count: 0,
           click_count: 0,
           click_rate: 0
-        },
-        msg: actIdRes.msg
+        }
       })
       return
     }
@@ -137,14 +136,22 @@ class Search {
     }
 
     const actIdRes = await getActId(user_id, channel_id)
-    // if (actIdRes.length === 0) {
-    //   ctx.send({
-    //     code: 200,
-    //     data: [],
-    //     msg: actIdRes.msg
-    //   })
-    //   return
-    // }
+    if ((!actIdRes) || actIdRes.length === 0) {
+      ctx.send({
+        code: 200,
+        data: {
+          bgArr: [],
+          bgTotal: 0,
+          clickArr: [],
+          clickTotal: 0,
+          datelist: [],
+          clickRate: 0,
+          clickRateArr: []
+        },
+        msg: 'success'
+      })
+      return
+    }
     // 查询曝光量
     let bgArr = [], bgTotal, clickArr = [], clickTotal, datelist = []
     await client.search({
