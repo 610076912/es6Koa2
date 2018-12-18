@@ -9,7 +9,7 @@ import superagent from 'superagent'
 * @return actIdRes[]
 * */
 let testEnv = process.env.NODE_ENV === 'test'
-let bestUrl = testEnv ?  'http://47.93.140.7' : 'http://context.videozhishi.com'
+let bestUrl = testEnv ?  'http://47.93.140.7' : 'https://context.videozhishi.com'
 async function getActId(userId, actType = 1) {
   let actIdRes
   await superagent

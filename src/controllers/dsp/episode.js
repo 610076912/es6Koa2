@@ -1,4 +1,4 @@
-import client from '../../config/config.elastic'
+import {client} from '../../config/config.elastic'
 
 
 class SearchEpisode {

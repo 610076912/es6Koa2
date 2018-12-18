@@ -1,4 +1,4 @@
-import client from '../../config/config.elastic'
+import {client, client1} from '../../config/config.elastic'
 
 class SmpSearch {
   constructor() {
@@ -27,7 +27,7 @@ class SmpSearch {
     console.log(searchBody)
 
 
-    await client.search({
+    await client1.search({
       index: '*bg*',
       body: {
         'size': 0,

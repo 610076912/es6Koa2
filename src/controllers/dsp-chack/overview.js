@@ -1,4 +1,4 @@
-import client from '../../config/config.elastic'
+import {client, client1} from "../../config/config.elastic";
 
 class Overview {
   constructor() {
@@ -32,7 +32,7 @@ class Overview {
 
     // 第一个查询广告曝光量
     let bgCount, playCount, clickCount
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_bg_log*',
       body: {
         'size': 0,
@@ -77,7 +77,7 @@ class Overview {
     })
 
     // 第三个查询点击量
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log*',
       body: {
         'size': 0,
@@ -192,7 +192,7 @@ class Overview {
     })
 
     // 查询曝光次数
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_bg_log*',
       body: {
         'size': 0,
@@ -246,7 +246,7 @@ class Overview {
     })
 
     // 查询点击次数
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log*',
       body: {
         'size': 0,
@@ -440,7 +440,7 @@ class Overview {
     })
 
     // 查询曝光量
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_bg_log-*',
       body: {
         'size': 0,
@@ -478,7 +478,7 @@ class Overview {
     })
 
     // 查询点击量
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log-*',
       body: {
         'size': 0,

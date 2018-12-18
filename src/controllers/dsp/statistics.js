@@ -1,4 +1,4 @@
-import client from '../../config/config.elastic'
+import {client, client1} from '../../config/config.elastic'
 import getActIdDetail from '../../service/get-actId-detail'
 
 class Statistics {
@@ -48,7 +48,7 @@ class Statistics {
     }
     // 查询曝光量
     let bgCount, clickCount, clickRate, bgArr = [], clickArr = [], clickRateArr = [], dateArr = []
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_bg_log-*',
       body: {
         'size': 0,
@@ -96,7 +96,7 @@ class Statistics {
     })
 
     // 查询点击量
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log-*',
       body: {
         'size': 0,

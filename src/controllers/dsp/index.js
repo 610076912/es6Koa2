@@ -1,6 +1,5 @@
-import client from '../../config/config.elastic'
+import {client, client1} from '../../config/config.elastic'
 import getActId from '../../service/get-act-id'
-import getActIdDetail from '../../service/get-actId-detail'
 
 class Search {
   constructor() {
@@ -29,10 +28,9 @@ class Search {
       return
     }
     const actIdRes = await getActId(user_id, channel_id)
-
     // 没有数据
     // console.log(actIdRes)
-    if ((!actIdRes)||actIdRes.length === 0) {
+    if ((!actIdRes) || actIdRes.length === 0) {
       ctx.send({
         code: 200,
         data: {
@@ -49,8 +47,8 @@ class Search {
 
     // 查询 曝光量
     let bg_count
-    await client.search({
-      index: 'sltlog_ad_bg_log-*',
+    await client1.search({
+      index: 'sltlog_ad_bg_log*',
       body: {
         'size': 0,
         'query': {
@@ -66,15 +64,14 @@ class Search {
           }
         }
       }
-    })
-      .then(res => {
+    }).then(res => {
         // ctx.send(res)
         bg_count = res.hits.total
       })
 
     // 查询 点击量
     let click_count
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log-*',
       body: {
         'size': 0,
@@ -154,7 +151,7 @@ class Search {
     }
     // 查询曝光量
     let bgArr = [], bgTotal, clickArr = [], clickTotal, datelist = []
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_bg_log-*',
       body: {
         'size': 0,
@@ -200,7 +197,7 @@ class Search {
     })
 
     // 查询点击量量
-    await client.search({
+    await client1.search({
       index: 'sltlog_ad_click_log-*',
       body: {
         'size': 0,
