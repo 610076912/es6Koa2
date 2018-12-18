@@ -56,6 +56,8 @@ let host1 = testEnv ? [{
     type: 'adlist'
   }
 ]
+
+
 const client = new ElasticSearch.Client({
   hosts: [
     host
